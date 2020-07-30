@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <GL/glut.h>
 
 /* Global variables */
@@ -5,7 +6,7 @@ char title[] = "[CG Project] WATER CYCLE";
 int refreshMills = 360;        // refresh interval in milliseconds
 
 GLfloat sunRadius = 0.15, sunPosX = -1.6, sunPoxY = 0.7;
-GLfloat dx = 0.01; //change in x i.e speed
+GLfloat dx = 0.01; //change in x
 GLfloat cloudRad = 0.09, Cloud1PosX = -1.2, Cloud1PosY = 0.7, Cloud2PosX = 0.59, Cloud2PoxY = 0.4; //Cloud Position of X and Y coordinate
 
 
@@ -54,48 +55,75 @@ void tree(GLfloat radius, GLfloat treePosX, GLfloat treePosY)
 
     glColor3f(0.28, 0.56, 0.0);
     glTranslatef(treePosX, treePosY, -4);
-    glutSolidSphere(radius, 50, 50);
+        glutSolidSphere(radius, 50, 50);
     glLoadIdentity();
-    glTranslatef(treePosX, treePosY+2*radius, -4);
-    glutSolidSphere(radius, 50, 50);
+        glTranslatef(treePosX, treePosY+2*radius, -4);
+        glutSolidSphere(radius, 50, 50);
+    glLoadIdentity();
+        glTranslatef(treePosX-radius/2, treePosY+radius/2, -4);
+        glutSolidSphere(7/6.0*radius, 50, 50);
+    glLoadIdentity();
+        glTranslatef(treePosX+radius/2, treePosY+radius/2, -4);
+        glutSolidSphere(7/6.0*radius, 50, 50);
 
     glLoadIdentity();
-    glTranslatef(treePosX-radius/2, treePosY+radius/2, -4);
-    glutSolidSphere(7/6.0*radius, 50, 50);
-     glLoadIdentity();
-    glTranslatef(treePosX+radius/2, treePosY+radius/2, -4);
-    glutSolidSphere(7/6.0*radius, 50, 50);
-
+        glTranslatef(treePosX-radius/2, treePosY-radius, -4);
+        glutSolidSphere(3/2.0*radius, 50, 50);
     glLoadIdentity();
-    glTranslatef(treePosX-radius/2, treePosY-radius, -4);
-    glutSolidSphere(3/2.0*radius, 50, 50);
-     glLoadIdentity();
-    glTranslatef(treePosX+radius/2, treePosY-radius, -4);
-    glutSolidSphere(3/2.0*radius, 50, 50);
+        glTranslatef(treePosX+radius/2, treePosY-radius, -4);
+        glutSolidSphere(3/2.0*radius, 50, 50);
 
     glLoadIdentity();
     glBegin(GL_POLYGON);
-    glVertex3f(treePosX+0.6*radius, treePosY, -3);
-    glVertex3f(treePosX-0.6*radius, treePosY, -3);
-    glVertex3f(treePosX-0.6*radius, treePosY-5*radius, -3);
-    glVertex3f(treePosX+0.6*radius, treePosY-5*radius, -3);
+        glVertex3f(treePosX+0.6*radius, treePosY, -3);
+        glVertex3f(treePosX-0.6*radius, treePosY, -3);
+        glVertex3f(treePosX-0.6*radius, treePosY-5*radius, -3);
+        glVertex3f(treePosX+0.6*radius, treePosY-5*radius, -3);
+    glEnd();
+}
+void Tree(GLfloat Size, GLfloat treePosX, GLfloat treePosY) //Christmas Tree
+{
+    glColor3f(0.28, 0.56, 0.0);
+    glBegin(GL_TRIANGLES);
+        glVertex3f(treePosX, treePosY+2*Size, -4);
+        glVertex3f(treePosX-0.8*Size, treePosY, -4);
+        glVertex3f(treePosX+0.8*Size, treePosY, -4);
+
+        glVertex3f(treePosX, treePosY+Size, -4);
+        glVertex3f(treePosX-Size, treePosY-Size, -4);
+        glVertex3f(treePosX+Size, treePosY-Size, -4);
+
+        glVertex3f(treePosX, treePosY, -4);
+        glVertex3f(treePosX-1.3*Size, treePosY-2*Size, -4);
+        glVertex3f(treePosX+1.3*Size, treePosY-2*Size, -4);
+    glEnd();
+    //Branch
+    glBegin(GL_POLYGON);
+        glVertex3f(treePosX+0.3*Size, treePosY-2*Size, -3);
+        glVertex3f(treePosX-0.3*Size, treePosY-2*Size, -3);
+        glVertex3f(treePosX-0.3*Size, treePosY-3*Size, -3);
+        glVertex3f(treePosX+0.3*Size, treePosY-3*Size, -3);
     glEnd();
 }
 void trees()
 {
-
+    //left to right
     tree(0.06, -1.7, 0.0);
     tree(0.03, -1.2, 0.0);
-    tree(0.07, 0.2, 0.0);
-    tree(0.04, 1.5, -0.2);
+    Tree(0.09, -0.8, -0.01);
+    Tree(0.1, -1.5, -0.1);
+    tree(0.07, -0.5, 0.0);
+    Tree(0.07, 1.0, -0.2);
     tree(0.03, 1.2, -0.3);
+    tree(0.04, 1.5, -0.2);
 }
+
 void display() {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
    //SUN
-   glLoadIdentity();                 // Reset the model-view matrix
+   glLoadIdentity();                 // Reset the model-view matri
    glColor3f(1.0, 1.0, 0.0);
    glTranslatef(sunPosX, sunPoxY, -3.0);
    glutSolidSphere(sunRadius, 100, 100);
@@ -134,7 +162,6 @@ void display() {
    Clouds(Cloud2PosX, Cloud2PoxY);
 
    trees();
-
    glutSwapBuffers();
 
    Cloud1PosX+=dx;
