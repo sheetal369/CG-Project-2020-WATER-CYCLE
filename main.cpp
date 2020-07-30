@@ -8,7 +8,7 @@ int refreshMills = 360;        // refresh interval in milliseconds
 GLfloat sunRadius = 0.15, sunPosX = -1.6, sunPoxY = 0.7;
 GLfloat dx = 0.01; //change in x
 GLfloat cloudRad = 0.09, Cloud1PosX = -1.2, Cloud1PosY = 0.7, Cloud2PosX = 0.59, Cloud2PoxY = 0.4; //Cloud Position of X and Y coordinate
-
+GLfloat swan1PosX = -1.0, swan2PosX = 1.5;
 
 /* Initialize OpenGL Graphics */
 void initGL() {
@@ -117,8 +117,123 @@ void trees()
     tree(0.03, 1.2, -0.3);
     tree(0.04, 1.5, -0.2);
 }
+void swan(GLfloat Size, GLfloat SwanX, GLfloat SwanY)
+{
+    glLoadIdentity();
+    //glColor3f(0.33, 0.34, 0.3);
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_TRIANGLES);
+    glVertex3f(SwanX+1.5*Size, SwanY+Size, -5);
+    glVertex3f(SwanX-0.5*Size, SwanY+Size, -5);
+    glVertex3f(SwanX, SwanY-Size, -5);
+   // glEnd();
 
+    glVertex3f(SwanX+0.01, SwanY-Size, -5);
+    glVertex3f(SwanX+Size, SwanY+Size/4, -5);
+    glVertex3f(SwanX+3*Size, SwanY+Size/4, -5);
+
+    glVertex3f(SwanX-0.01, SwanY-Size, -5);
+    glVertex3f(SwanX-Size, SwanY-Size, -5);
+    glVertex3f(SwanX-Size, SwanY+2.5*Size, -5);
+
+    glVertex3f(SwanX-Size, SwanY+2.5*Size, -5);
+    glVertex3f(SwanX-1.3*Size, SwanY+2.51*Size, -5);
+    glVertex3f(SwanX-1.5*Size, SwanY+1.5*Size, -5);
+    glEnd();
+}
+
+void House(GLfloat Size, GLfloat HouseX, GLfloat HouseY)
+{
+    //WALLS
+    glColor3f(0.3, 0.43, 0.6);
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX, HouseY, -4);
+    glVertex3f(HouseX+1.2*Size, HouseY+0.4*Size, -4);
+    glVertex3f(HouseX+1.2*Size, HouseY+1.4*Size, -4);
+    glVertex3f(HouseX+0.5*Size, HouseY+1.53*Size, -4);
+    glVertex3f(HouseX, HouseY+Size, -4);
+    glVertex3f(HouseX-1.2*Size, HouseY+1.4*Size, -4);
+    glVertex3f(HouseX-1.2*Size, HouseY+0.4*Size, -4);
+    glEnd();
+
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_LINES);
+    glVertex3f(HouseX, HouseY, -4);
+    glVertex3f(HouseX, HouseY+Size, -4);
+    glEnd();
+
+    //Front Roof
+    glColor3f(1.0, 0.5, 0.3);
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX+0.1*Size, HouseY+0.9*Size, -3);
+    glVertex3f(HouseX+0.8*Size, HouseY+1.53*Size, -3);
+    glVertex3f(HouseX-0.7*Size, HouseY+1.9*Size, -3);
+    glVertex3f(HouseX-1.35*Size, HouseY+1.34*Size, -3);
+    glEnd();
+    //Back Roof
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX+0.8*Size, HouseY+1.53*Size, -3);
+    glVertex3f(HouseX+1.3*Size, HouseY+1.4*Size, -3);
+    glVertex3f(HouseX+1.2*Size, HouseY+1.4*Size, -3);
+    glVertex3f(HouseX+0.5*Size, HouseY+1.53*Size, -3);
+    glEnd();
+
+
+
+    //DOOR WINDOW
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX-0.25*Size, HouseY+0.65*Size, -1);
+    glVertex3f(HouseX-0.25*Size, HouseY+0.75*Size, -1);
+    glVertex3f(HouseX-0.44*Size, HouseY+0.80*Size, -1);
+    glVertex3f(HouseX-0.44*Size, HouseY+0.70*Size, -1);
+    glEnd();
+
+    //DOOR
+    glColor3f(0.42, 0.49, 0.56);
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX-0.2*Size, HouseY+0.15*Size, -3);
+    glVertex3f(HouseX-0.2*Size, HouseY+0.85*Size, -3);
+    glVertex3f(HouseX-0.5*Size, HouseY+0.95*Size, -3);
+    glVertex3f(HouseX-0.5*Size, HouseY+0.25*Size, -3);
+    glEnd();
+
+
+    //Windows
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX-0.6*Size, HouseY+0.45*Size, -3);
+    glVertex3f(HouseX-0.6*Size, HouseY+0.85*Size, -3);
+    glVertex3f(HouseX-Size, HouseY+0.95*Size, -3);
+    glVertex3f(HouseX-Size, HouseY+0.55*Size, -3);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex3f(HouseX+0.4*Size, HouseY+0.45*Size, -3);
+    glVertex3f(HouseX+0.4*Size, HouseY+0.85*Size, -3);
+    glVertex3f(HouseX+0.8*Size, HouseY+0.95*Size, -3);
+    glVertex3f(HouseX+0.8*Size, HouseY+0.55*Size, -3);
+    glEnd();
+
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_LINES);
+    glVertex3f(HouseX+0.6*Size, HouseY+0.50*Size, -3);
+    glVertex3f(HouseX+0.6*Size, HouseY+0.90*Size, -3);
+    glVertex3f(HouseX+0.4*Size, HouseY+0.65*Size, -3);
+    glVertex3f(HouseX+0.8*Size, HouseY+0.75*Size, -3);
+
+    glVertex3f(HouseX-0.8*Size, HouseY+0.50*Size, -3);
+    glVertex3f(HouseX-0.8*Size, HouseY+0.90*Size, -3);
+    glVertex3f(HouseX-0.6*Size, HouseY+0.65*Size, -3);
+    glVertex3f(HouseX-Size, HouseY+0.75*Size, -3);
+    glEnd();
+
+    //DOOR Knob
+    glLoadIdentity();
+    glTranslatef(HouseX-0.45*Size, HouseY+0.60*Size, -3);
+    glutSolidSphere(0.01, 10, 10);
+}
 void display() {
+ {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
@@ -158,14 +273,23 @@ void display() {
       glVertex3f(2, -0.3, -5);
    glEnd();
 
+
    Clouds(Cloud1PosX, Cloud1PosY);
    Clouds(Cloud2PosX, Cloud2PoxY);
 
    trees();
+
+   swan(0.05,swan1PosX , -0.7);
+   swan(0.07, swan2PosX, -0.8);
+ }
+   House(0.35, 0.4, -0.35);
    glutSwapBuffers();
 
    Cloud1PosX+=dx;
    Cloud2PosX+=dx/2;
+   swan1PosX-=dx;
+   swan2PosX-=dx/2;
+
 }
 
 /* Called back when timer expired */
