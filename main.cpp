@@ -1,4 +1,3 @@
-#include <windows.h>
 #include <GL/glut.h>
 
 /* Global variables */
@@ -7,8 +6,14 @@ int refreshMills = 360;        // refresh interval in milliseconds
 
 GLfloat sunRadius = 0.15, sunPosX = -1.6, sunPoxY = 0.7;
 GLfloat dx = 0.01; //change in x
-GLfloat cloudRad = 0.09, Cloud1PosX = -1.2, Cloud1PosY = 0.7, Cloud2PosX = 0.59, Cloud2PoxY = 0.4; //Cloud Position of X and Y coordinate
-GLfloat swan1PosX = -1.0, swan2PosX = 1.5;
+GLfloat cloudRad = 0.09, Cloud1PosX = -1.2, Cloud1PosY = 0.7, Cloud2PosX = 1.55, Cloud2PosY = 0.4 ; //Cloud Position of X and Y coordinate
+GLfloat Cloud3PosX = -3.54, Cloud3PosY = 0.84;
+GLfloat swan1PosX = -1.0, swan2PosX = 1.5, swan3PosX = 2.5;
+GLfloat WVx = -1.69, WVy = -0.43; //WaterVapor
+GLfloat RDx = Cloud2PosX+8*dx/2, RDy = Cloud2PosY+0.09; //RainDrop
+//Depths
+GLfloat  sunPosZ = -2.5,  CloudPosZ = -2;
+bool RainStatus = TRUE;
 
 /* Initialize OpenGL Graphics */
 void initGL() {
@@ -20,31 +25,32 @@ void initGL() {
 
    glShadeModel(GL_SMOOTH);   // Enable smooth shading
    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+   //glEnable(GL_LIGHTING);
 }
 
 void Clouds(GLfloat CloudPosX, GLfloat CloudPosY)
 {
     glLoadIdentity();
     glColor3f(1.0, 1.0, 1.0);
-    glTranslatef(CloudPosX, CloudPosY, -2);
+    glTranslatef(CloudPosX, CloudPosY, CloudPosZ);
     glutSolidSphere(cloudRad, 50, 50);
 
     glLoadIdentity();
-    glTranslatef(CloudPosX+4*0.08, CloudPosY, -2);
+    glTranslatef(CloudPosX+4*0.08, CloudPosY, CloudPosZ);
     glutSolidSphere(cloudRad, 50, 50);
 
     for (int i = 1; i<=3; i++)
     {
         glLoadIdentity();
-        glTranslatef(CloudPosX+i*0.08, CloudPosY, -2);
+        glTranslatef(CloudPosX+i*0.08, CloudPosY, CloudPosZ);
         glutSolidSphere(cloudRad, 50, 50);
 
         glLoadIdentity();
-        glTranslatef(CloudPosX+i*0.09, CloudPosY+0.07, -2);
+        glTranslatef(CloudPosX+i*0.09, CloudPosY+0.07, CloudPosZ);
         glutSolidSphere(cloudRad, 50, 50);
 
         glLoadIdentity();
-        glTranslatef(CloudPosX+i*0.09, CloudPosY-0.07, -2);
+        glTranslatef(CloudPosX+i*0.09, CloudPosY-0.07, CloudPosZ);
         glutSolidSphere(cloudRad, 50, 50);
         glLoadIdentity();
     }
@@ -54,31 +60,31 @@ void tree(GLfloat radius, GLfloat treePosX, GLfloat treePosY)
 {
 
     glColor3f(0.28, 0.56, 0.0);
-    glTranslatef(treePosX, treePosY, -4);
+    glTranslatef(treePosX, treePosY, -5);
         glutSolidSphere(radius, 50, 50);
     glLoadIdentity();
-        glTranslatef(treePosX, treePosY+2*radius, -4);
+        glTranslatef(treePosX, treePosY+2*radius, -5);
         glutSolidSphere(radius, 50, 50);
     glLoadIdentity();
-        glTranslatef(treePosX-radius/2, treePosY+radius/2, -4);
+        glTranslatef(treePosX-radius/2, treePosY+radius/2, -5);
         glutSolidSphere(7/6.0*radius, 50, 50);
     glLoadIdentity();
-        glTranslatef(treePosX+radius/2, treePosY+radius/2, -4);
+        glTranslatef(treePosX+radius/2, treePosY+radius/2, -5);
         glutSolidSphere(7/6.0*radius, 50, 50);
 
     glLoadIdentity();
-        glTranslatef(treePosX-radius/2, treePosY-radius, -4);
+        glTranslatef(treePosX-radius/2, treePosY-radius, -5);
         glutSolidSphere(3/2.0*radius, 50, 50);
     glLoadIdentity();
-        glTranslatef(treePosX+radius/2, treePosY-radius, -4);
+        glTranslatef(treePosX+radius/2, treePosY-radius, -5);
         glutSolidSphere(3/2.0*radius, 50, 50);
 
     glLoadIdentity();
     glBegin(GL_POLYGON);
-        glVertex3f(treePosX+0.6*radius, treePosY, -3);
-        glVertex3f(treePosX-0.6*radius, treePosY, -3);
-        glVertex3f(treePosX-0.6*radius, treePosY-5*radius, -3);
-        glVertex3f(treePosX+0.6*radius, treePosY-5*radius, -3);
+        glVertex3f(treePosX+0.6*radius, treePosY, -5);
+        glVertex3f(treePosX-0.6*radius, treePosY, -5);
+        glVertex3f(treePosX-0.6*radius, treePosY-5*radius, -5);
+        glVertex3f(treePosX+0.6*radius, treePosY-5*radius, -5);
     glEnd();
 }
 void Tree(GLfloat Size, GLfloat treePosX, GLfloat treePosY) //Christmas Tree
@@ -123,25 +129,47 @@ void swan(GLfloat Size, GLfloat SwanX, GLfloat SwanY)
     //glColor3f(0.33, 0.34, 0.3);
     glColor3f(1.0, 1.0, 1.0);
     glBegin(GL_TRIANGLES);
-    glVertex3f(SwanX+1.5*Size, SwanY+Size, -5);
-    glVertex3f(SwanX-0.5*Size, SwanY+Size, -5);
-    glVertex3f(SwanX, SwanY-Size, -5);
+    glVertex3f(SwanX+1.5*Size, SwanY+Size, -3);
+    glVertex3f(SwanX-0.5*Size, SwanY+Size, -3);
+    glVertex3f(SwanX, SwanY-Size, -3);
    // glEnd();
 
-    glVertex3f(SwanX+0.01, SwanY-Size, -5);
-    glVertex3f(SwanX+Size, SwanY+Size/4, -5);
-    glVertex3f(SwanX+3*Size, SwanY+Size/4, -5);
+    glVertex3f(SwanX+0.01, SwanY-Size, -3);
+    glVertex3f(SwanX+Size, SwanY+Size/4, -3);
+    glVertex3f(SwanX+3*Size, SwanY+Size/4, -3);
 
-    glVertex3f(SwanX-0.01, SwanY-Size, -5);
-    glVertex3f(SwanX-Size, SwanY-Size, -5);
-    glVertex3f(SwanX-Size, SwanY+2.5*Size, -5);
+    glVertex3f(SwanX-0.01, SwanY-Size, -3);
+    glVertex3f(SwanX-Size, SwanY-Size, -3);
+    glVertex3f(SwanX-Size, SwanY+2.5*Size, -3);
 
-    glVertex3f(SwanX-Size, SwanY+2.5*Size, -5);
-    glVertex3f(SwanX-1.3*Size, SwanY+2.51*Size, -5);
-    glVertex3f(SwanX-1.5*Size, SwanY+1.5*Size, -5);
+    glVertex3f(SwanX-Size, SwanY+2.5*Size, -3);
+    glVertex3f(SwanX-1.3*Size, SwanY+2.51*Size, -3);
+    glVertex3f(SwanX-1.5*Size, SwanY+1.5*Size, -3);
     glEnd();
 }
-
+void waterVapour()
+{
+  for(int j = 0; j<5; j++){
+    for(int i = 0; i<4; i++)
+    {
+        glColor3f(0.31,0.26,1.0);
+        glLoadIdentity();
+        glTranslatef(WVx-i*0.05, WVy-j*0.08, -2.25);
+        glutSolidSphere(0.009, 20, 20);
+    }
+  }
+}
+void RainDrops()
+{
+    for (int j = 0; j<10; j++)
+    for (int i = 0; i<5; i++)
+    {
+          glColor3f(0.31,0.26,1.0);
+        glLoadIdentity();
+         glTranslatef(RDx+i*0.09, RDy-j*0.09, CloudPosZ);
+        glutSolidSphere(0.01, 20, 20);
+    }
+}
 void House(GLfloat Size, GLfloat HouseX, GLfloat HouseY)
 {
     //WALLS
@@ -240,7 +268,7 @@ void display() {
    //SUN
    glLoadIdentity();                 // Reset the model-view matri
    glColor3f(1.0, 1.0, 0.0);
-   glTranslatef(sunPosX, sunPoxY, -3.0);
+   glTranslatef(sunPosX, sunPoxY, sunPosZ);
    glutSolidSphere(sunRadius, 100, 100);
 
    //SEA
@@ -257,10 +285,10 @@ void display() {
    glLoadIdentity();
    glColor3f(0.6,0.8,0.196078);
    glBegin(GL_POLYGON);
-      glVertex3f(2, -0.3, -5);
-      glVertex3f(-2, 0.0, -5);
-      glVertex3f(-2, -0.5, -5);
-      glVertex3f(2, -0.5, -5);
+      glVertex3f(2, -0.3, -6);
+      glVertex3f(-2, 0.0, -6);
+      glVertex3f(-2, -0.5, -6);
+      glVertex3f(2, -0.5, -6);
    glEnd();
 
    //SKY
@@ -273,22 +301,32 @@ void display() {
       glVertex3f(2, -0.3, -5);
    glEnd();
 
-
+}
    Clouds(Cloud1PosX, Cloud1PosY);
-   Clouds(Cloud2PosX, Cloud2PoxY);
-
+   Clouds(Cloud2PosX, Cloud2PosY);
+   Clouds(Cloud3PosX, Cloud3PosY);
    trees();
+
+   waterVapour();
+   RainDrops();
 
    swan(0.05,swan1PosX , -0.7);
    swan(0.07, swan2PosX, -0.8);
- }
+   swan(0.06, swan3PosX, -0.6);
+
    House(0.35, 0.4, -0.35);
    glutSwapBuffers();
 
    Cloud1PosX+=dx;
    Cloud2PosX+=dx/2;
+   Cloud3PosX+=dx;
+
+   WVy+=dx;
+   RDy -= 3*dx;
+
    swan1PosX-=dx;
    swan2PosX-=dx/2;
+   swan3PosX-=dx/3;
 
 }
 
